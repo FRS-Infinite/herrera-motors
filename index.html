@@ -3,28 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Herrera Motors</title>
+  <title>Herrera Motors | Estoque atualizado</title>
+  <link rel="icon" href="favicon.ico" />
+  <meta name="description" content="Mais de 30 veículos disponíveis com qualidade e procedência. Herrera Motors - Seu próximo carro está aqui.">
+  <meta property="og:title" content="Herrera Motors" />
+  <meta property="og:description" content="Mais de 30 veículos disponíveis com qualidade e procedência." />
+  <meta property="og:image" content="https://placehold.co/1200x630?text=Herrera+Motors" />
+  <meta property="og:type" content="website" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    async function carregarEstoque() {
-      const response = await fetch("https://opensheet.elk.sh/1BbgZrSO_7nVtTJpXDFK3yyucGRNyh6q3LwTYwPYpuTM/1");
-      const data = await response.json();
-      const grid = document.getElementById("estoque");
+    let dadosOriginais = [];
 
+    async function carregarEstoque() {
+      const res = await fetch("https://opensheet.elk.sh/1BbgZrSO_7nVtTJpXDFK3yyucGRNyh6q3LwTYwPYpuTM/1");
+      const data = await res.json();
+      dadosOriginais = data;
+      renderizarEstoque(data);
+      carregarFiltros(data);
+    }
+
+    function carregarFiltros(data) {
+      const anos = [...new Set(data.map(item => item.Ano))];
+      const marcas = [...new Set(data.map(item => item.Modelo.split(' ')[0]))];
+      const anoSelect = document.getElementById("filtro-ano");
+      const marcaSelect = document.getElementById("filtro-marca");
+
+      anos.sort().forEach(ano => {
+        anoSelect.innerHTML += `<option value="${ano}">${ano}</option>`;
+      });
+      marcas.sort().forEach(marca => {
+        marcaSelect.innerHTML += `<option value="${marca}">${marca}</option>`;
+      });
+    }
+
+    function aplicarFiltros() {
+      const ano = document.getElementById("filtro-ano").value;
+      const marca = document.getElementById("filtro-marca").value;
+      const preco = document.getElementById("filtro-preco").value;
+      let resultado = dadosOriginais;
+
+      if (ano) resultado = resultado.filter(item => item.Ano === ano);
+      if (marca) resultado = resultado.filter(item => item.Modelo.includes(marca));
+      if (preco) {
+        resultado = resultado.filter(item => {
+          const valor = parseFloat(item.Preço.replace('R$', '').replace('.', '').replace(',', '.'));
+          if (preco === '1') return valor < 40000;
+          if (preco === '2') return valor >= 40000 && valor <= 80000;
+          if (preco === '3') return valor > 80000;
+        });
+      }
+
+      renderizarEstoque(resultado);
+    }
+
+    function renderizarEstoque(lista) {
+      const grid = document.getElementById("estoque");
       grid.innerHTML = "";
-      data.forEach(carro => {
+      if (lista.length === 0) {
+        grid.innerHTML = "<p class='col-span-full text-center text-gray-600'>Nenhum veículo encontrado.</p>";
+        return;
+      }
+
+      lista.forEach((carro, idx) => {
+        const link = `veiculo.html?id=${idx}`;
         const item = document.createElement("div");
         item.className = "bg-white rounded-lg shadow hover:shadow-lg transition";
-
         item.innerHTML = `
-          <img src="${carro.Imagem}" alt="${carro.Modelo}" class="rounded-t-lg w-full h-48 object-cover">
-          <div class="p-4">
-            <h4 class="text-xl font-semibold">${carro.Modelo}</h4>
-            <p class="text-sm text-gray-600">Ano: ${carro.Ano} • KM: ${carro.KM}</p>
-            <p class="text-lg text-yellow-500 font-bold mt-2">${carro.Preço}</p>
-            <a href="https://wa.me/5511910803102?text=Olá!%20Tenho%20interesse%20em%20${encodeURIComponent(carro.Modelo)}" target="_blank"
-               class="inline-block mt-4 bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-300">Falar no WhatsApp</a>
-          </div>
+          <a href="${link}">
+            <img src="${carro.Imagem}" alt="${carro.Modelo}" class="rounded-t-lg w-full h-48 object-cover">
+            <div class="p-4">
+              <h4 class="text-xl font-semibold">${carro.Modelo}</h4>
+              <p class="text-sm text-gray-600">Ano: ${carro.Ano} • KM: ${carro.KM}</p>
+              <p class="text-lg text-yellow-500 font-bold mt-2">${carro.Preço}</p>
+            </div>
+          </a>
         `;
         grid.appendChild(item);
       });
@@ -38,53 +90,32 @@
   <header class="bg-black text-white sticky top-0 z-50 shadow">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <h1 class="text-xl font-bold tracking-wide">Herrera Motors</h1>
-      <nav class="space-x-6 hidden md:block">
-        <a href="#estoque" class="hover:text-yellow-400">Estoque</a>
-        <a href="#simulacao" class="hover:text-yellow-400">Simulação</a>
-        <a href="#contato" class="hover:text-yellow-400">Contato</a>
-      </nav>
       <span class="hidden sm:inline-block text-yellow-400 font-semibold">(11) 9 1080-3102</span>
     </div>
   </header>
 
-  <section class="bg-yellow-400 py-16 text-center">
-    <h2 class="text-4xl font-bold text-black">Seu próximo carro está aqui</h2>
-    <p class="mt-4 text-lg">Confiabilidade, qualidade e transparência.</p>
-    <a href="#estoque" class="mt-6 inline-block bg-black text-white px-6 py-3 rounded hover:bg-gray-800">Ver estoque</a>
+  <section class="py-8 bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+      <div><label class="block text-sm font-semibold">Marca</label><select id="filtro-marca" onchange="aplicarFiltros()" class="w-full p-2 border rounded"><option value="">Todas</option></select></div>
+      <div><label class="block text-sm font-semibold">Ano</label><select id="filtro-ano" onchange="aplicarFiltros()" class="w-full p-2 border rounded"><option value="">Todos</option></select></div>
+      <div><label class="block text-sm font-semibold">Preço</label><select id="filtro-preco" onchange="aplicarFiltros()" class="w-full p-2 border rounded">
+        <option value="">Todos</option>
+        <option value="1">Até R$ 40 mil</option>
+        <option value="2">R$ 40 mil a R$ 80 mil</option>
+        <option value="3">Acima de R$ 80 mil</option>
+      </select></div>
+    </div>
   </section>
 
-  <section class="py-16 px-4 max-w-7xl mx-auto">
-    <h3 class="text-3xl font-bold text-center mb-10">Estoque Atualizado</h3>
+  <section class="py-10 px-4 max-w-7xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-8">Estoque Atualizado</h2>
     <div id="estoque" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <p class="col-span-full text-center">Carregando veículos...</p>
     </div>
   </section>
 
-  <section id="simulacao" class="bg-white py-16 px-4">
-    <div class="max-w-3xl mx-auto">
-      <h3 class="text-3xl font-bold text-center mb-10">Simule seu Financiamento</h3>
-      <form action="https://formsubmit.co/ajax/desafiomilionario2026@gmail.com" method="POST" class="grid gap-4" id="form">
-        <input type="text" name="Nome" placeholder="Nome completo" required class="p-3 border rounded">
-        <input type="tel" name="Telefone" placeholder="Telefone com DDD" required class="p-3 border rounded">
-        <input type="text" name="Modelo de Interesse" placeholder="Modelo do carro" required class="p-3 border rounded">
-        <input type="text" name="Entrada" placeholder="Valor de entrada disponível" required class="p-3 border rounded">
-        <button type="submit" class="bg-yellow-400 text-black px-6 py-3 rounded hover:bg-yellow-300">Enviar Simulação</button>
-      </form>
-    </div>
-  </section>
-
-  <footer class="bg-black text-white py-10" id="contato">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-      <p class="font-bold text-lg mb-2">Herrera Motors</p>
-      <p>(11) 9 1080-3102 · contato@herreramotors.com.br</p>
-      <p>Av. das Nações, 123 - Bauru/SP</p>
-      <p class="text-sm text-gray-400 mt-4">© 2025 Herrera Motors. Todos os direitos reservados.</p>
-    </div>
+  <footer class="bg-black text-white text-center py-6">
+    <p>© 2025 Herrera Motors · Todos os direitos reservados</p>
   </footer>
-
-  <a href="https://wa.me/5511910803102" target="_blank"
-     class="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg z-50">
-    💬 WhatsApp
-  </a>
 </body>
 </html>
