@@ -1,58 +1,124 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Herrera Motors</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-black text-white">
-  <header class="bg-gray-900 p-4 text-center text-2xl font-bold">Herrera Motors</header>
-  <main class="max-w-6xl mx-auto py-12 px-4">
-    <h2 class="text-3xl font-bold mb-6">Estoque Atualizado</h2>
-    <div id="veiculos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-  </main>
-  <footer class="bg-gray-800 p-6 text-center text-sm text-gray-400">© 2025 Herrera Motors</footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", async function carregarEstoque() {
-      const veiculosContainer = document.getElementById("veiculos");
-      const url = "https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*";
-
-      try {
-        const response = await fetch(url, {
-          headers: {
-            "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU",
-          }
-        });
-
-        const data = await response.json();
-        veiculosContainer.innerHTML = "";
-
-        data.forEach(carro => {
-          veiculosContainer.innerHTML += `
-            <div class="gradient-border bg-neutral-900 rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105">
-              <img src="${carro.imagem_url}" class="w-full h-48 object-cover" alt="${carro.modelo}">
-              <div class="p-4">
-                <h4 class="text-xl font-bold text-white">${carro.modelo}</h4>
-                <p class="text-sm text-gray-300">${carro.ano} • ${carro.km}</p>
-                <p class="text-lg text-yellow-500 font-bold mt-2">${carro.preco}</p>
-                <a href="https://wa.me/5511910803102?text=Tenho%20interesse%20no%20${encodeURIComponent(carro.modelo)}"
-                  target="_blank"
-                  class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-400">
-                  Falar no WhatsApp
-                </a>
-              </div>
-            </div>
-          `;
-        });
-      } catch (error) {
-        console.error("Erro ao carregar veículos:", error);
-        veiculosContainer.innerHTML = "<p class='text-red-500'>Erro ao carregar os veículos. Tente novamente mais tarde.</p>";
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Herrera Motors</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .avant-button {
+        background-color: #d9491d;
+        padding: 0.75rem 1.5rem;
+        font-weight: bold;
+        color: white;
+        clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%);
       }
-    });
-  </script>
-</body>
+      .avant-button:hover {
+        background-color: #c73f18;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-black">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full bg-white shadow z-50">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex space-x-10 items-center w-full justify-between">
+          <div class="flex space-x-6 text-sm">
+            <a href="#" class="hover:text-gray-600">Sobre</a>
+            <a href="#" class="hover:text-gray-600">Experiência AG</a>
+            <a href="#estoque" class="hover:text-gray-600">Veículos</a>
+            <a href="#" class="hover:text-gray-600">Blog</a>
+            <a href="#" class="hover:text-gray-600">Universo AG</a>
+            <a href="#contato" class="hover:text-gray-600">Contato</a>
+          </div>
+          <h1 class="text-xl font-semibold tracking-widest">AVANTGARDE</h1>
+          <div class="space-x-4">
+            <button><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405M10 10a5 5 0 100-10 5 5 0 000 10zm0 0v6" /></svg></button>
+            <button><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="pt-32 pb-20 text-center">
+      <div class="max-w-4xl mx-auto px-4">
+        <div class="bg-white shadow-lg py-8 px-6 rounded-lg mb-10">
+          <h2 class="text-xl font-bold mb-4">Encontre seu próximo veículo</h2>
+          <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+            <select id="filtroMarca" class="border-b-2 border-orange-500 px-4 py-2 focus:outline-none">
+              <option selected disabled>Selecione a marca</option>
+            </select>
+            <select id="filtroModelo" class="border-b-2 border-orange-500 px-4 py-2 focus:outline-none">
+              <option selected disabled>Selecione o modelo</option>
+            </select>
+            <button class="avant-button" onclick="filtrarVeiculos()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m0 0a7 7 0 1114 0 7 7 0 01-14 0z" /></svg>
+              BUSCAR
+            </button>
+          </div>
+        </div>
+
+        <div id="estoque" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Cards serão inseridos via JS -->
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-black text-white py-10 text-center text-sm">
+      <p>© 2025 Herrera Motors - Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+      const url = 'https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE';
+      const headers = {
+        apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU'
+      };
+
+      async function carregarEstoque() {
+        try {
+          const res = await fetch(`${url}?select=*`, { headers });
+          const data = await res.json();
+          const container = document.getElementById('estoque');
+
+          const marcas = new Set();
+          const modelos = new Set();
+
+          container.innerHTML = '';
+          data.forEach(v => {
+            marcas.add(v.modelo.split(' ')[0]);
+            modelos.add(v.modelo);
+
+            container.innerHTML += `
+              <div class="shadow rounded overflow-hidden">
+                <img src="${v.imagem_url}" alt="${v.modelo}" class="w-full h-56 object-cover">
+                <div class="p-4">
+                  <h3 class="text-lg font-semibold">${v.modelo}</h3>
+                  <p class="text-sm text-gray-500">Ano: ${v.ano} • KM: ${v.km}</p>
+                  <p class="text-orange-600 font-bold text-lg mt-2">${v.preco}</p>
+                </div>
+              </div>
+            `;
+          });
+
+          const marcaSelect = document.getElementById('filtroMarca');
+          const modeloSelect = document.getElementById('filtroModelo');
+          marcas.forEach(m => marcaSelect.innerHTML += `<option>${m}</option>`);
+          modelos.forEach(m => modeloSelect.innerHTML += `<option>${m}</option>`);
+        } catch (err) {
+          console.error('Erro ao carregar estoque', err);
+        }
+      }
+
+      function filtrarVeiculos() {
+        const marca = document.getElementById('filtroMarca').value;
+        const modelo = document.getElementById('filtroModelo').value;
+        alert(`Filtrar por: ${marca} - ${modelo}`); // Placeholder
+      }
+
+      carregarEstoque();
+    </script>
+  </body>
 </html>
