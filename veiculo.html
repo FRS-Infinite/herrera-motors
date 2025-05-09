@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <title>Veículo | Herrera Motors</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    async function carregarVeiculo() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
-      const res = await fetch("https://opensheet.elk.sh/1BbgZrSO_7nVtTJpXDFK3yyucGRNyh6q3LwTYwPYpuTM/1");
-      const data = await res.json();
-      const carro = data[id];
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Veículo - Herrera Motors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-white text-black">
+    <div id="detalhes" class="flex flex-col md:flex-row p-8 gap-8 max-w-6xl mx-auto"></div>
 
-      document.getElementById("modelo").textContent = carro.Modelo;
-      document.getElementById("imagem").src = carro.Imagem;
-      document.getElementById("ano").textContent = carro.Ano;
-      document.getElementById("km").textContent = carro.KM;
-      document.getElementById("preco").textContent = carro.Preço;
-    }
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const params = new URLSearchParams(window.location.search);
+        const modelo = params.get("modelo");
 
-    document.addEventListener("DOMContentLoaded", carregarVeiculo);
-  </script>
-</head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="max-w-4xl mx-auto py-12 px-4">
-    <a href="index.html" class="text-blue-600 mb-6 inline-block">← Voltar</a>
-    <div class="bg-white p-6 rounded-lg shadow">
-      <img id="imagem" src="" alt="Imagem" class="w-full h-96 object-cover rounded mb-6">
-      <h1 id="modelo" class="text-3xl font-bold mb-2"></h1>
-      <p class="text-gray-600"><strong>Ano:</strong> <span id="ano"></span> | <strong>KM:</strong> <span id="km"></span></p>
-      <p class="text-yellow-500 text-xl font-bold mt-4" id="preco"></p>
-      <a id="zap" href="https://wa.me/5511910803102" target="_blank"
-         class="mt-6 inline-block bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600">Falar via WhatsApp</a>
-    </div>
-  </div>
-</body>
+        const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?modelo=eq." + encodeURIComponent(modelo) + "&select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
+        const dados = await res.json();
+
+        if (dados.length === 0) return;
+
+        const v = dados[0];
+        document.getElementById("detalhes").innerHTML = `
+          <div class="flex-1">
+            <img src="${v.imagem_url}" alt="${v.modelo}" class="w-full rounded shadow" />
+          </div>
+          <div class="flex-1 space-y-4">
+            <h1 class="text-3xl font-bold">${v.modelo}</h1>
+            <p><strong>Ano:</strong> ${v.ano}</p>
+            <p><strong>Km:</strong> ${v.km}</p>
+            <p><strong>Preço:</strong> ${v.preco}</p>
+            <a href="/" class="text-orange-600 underline">Voltar</a>
+          </div>
+        `;
+      });
+    </script>
+  </body>
 </html>
