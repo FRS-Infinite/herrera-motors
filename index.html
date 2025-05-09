@@ -2,81 +2,39 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Herrera Motors | Estoque atualizado</title>
-  <link rel="icon" href="favicon.ico" />
-  <meta name="description" content="Mais de 30 veículos disponíveis com qualidade e procedência. Herrera Motors - Seu próximo carro está aqui.">
-  <meta property="og:title" content="Herrera Motors" />
-  <meta property="og:description" content="Mais de 30 veículos disponíveis com qualidade e procedência." />
-  <meta property="og:image" content="https://placehold.co/1200x630?text=Herrera+Motors" />
-  <meta property="og:type" content="website" />
+  <title>Herrera Motors | Estoque Online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    let dadosOriginais = [];
-
     async function carregarEstoque() {
-      const res = await fetch("https://opensheet.elk.sh/1BbgZrSO_7nVtTJpXDFK3yyucGRNyh6q3LwTYwPYpuTM/1");
+      const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/estoque?select=*", {
+        headers: {
+          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU",
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
+        }
+      });
       const data = await res.json();
-      dadosOriginais = data;
-      renderizarEstoque(data);
-      carregarFiltros(data);
-    }
-
-    function carregarFiltros(data) {
-      const anos = [...new Set(data.map(item => item.Ano))];
-      const marcas = [...new Set(data.map(item => item.Modelo.split(' ')[0]))];
-      const anoSelect = document.getElementById("filtro-ano");
-      const marcaSelect = document.getElementById("filtro-marca");
-
-      anos.sort().forEach(ano => {
-        anoSelect.innerHTML += `<option value="${ano}">${ano}</option>`;
-      });
-      marcas.sort().forEach(marca => {
-        marcaSelect.innerHTML += `<option value="${marca}">${marca}</option>`;
-      });
-    }
-
-    function aplicarFiltros() {
-      const ano = document.getElementById("filtro-ano").value;
-      const marca = document.getElementById("filtro-marca").value;
-      const preco = document.getElementById("filtro-preco").value;
-      let resultado = dadosOriginais;
-
-      if (ano) resultado = resultado.filter(item => item.Ano === ano);
-      if (marca) resultado = resultado.filter(item => item.Modelo.includes(marca));
-      if (preco) {
-        resultado = resultado.filter(item => {
-          const valor = parseFloat(item.Preço.replace('R$', '').replace('.', '').replace(',', '.'));
-          if (preco === '1') return valor < 40000;
-          if (preco === '2') return valor >= 40000 && valor <= 80000;
-          if (preco === '3') return valor > 80000;
-        });
-      }
-
-      renderizarEstoque(resultado);
-    }
-
-    function renderizarEstoque(lista) {
       const grid = document.getElementById("estoque");
+
       grid.innerHTML = "";
-      if (lista.length === 0) {
-        grid.innerHTML = "<p class='col-span-full text-center text-gray-600'>Nenhum veículo encontrado.</p>";
+
+      if (data.length === 0) {
+        grid.innerHTML = "<p class='col-span-full text-center text-gray-600'>Nenhum veículo disponível.</p>";
         return;
       }
 
-      lista.forEach((carro, idx) => {
-        const link = `veiculo.html?id=${idx}`;
+      data.forEach(carro => {
         const item = document.createElement("div");
         item.className = "bg-white rounded-lg shadow hover:shadow-lg transition";
         item.innerHTML = `
-          <a href="${link}">
-            <img src="${carro.Imagem}" alt="${carro.Modelo}" class="rounded-t-lg w-full h-48 object-cover">
-            <div class="p-4">
-              <h4 class="text-xl font-semibold">${carro.Modelo}</h4>
-              <p class="text-sm text-gray-600">Ano: ${carro.Ano} • KM: ${carro.KM}</p>
-              <p class="text-lg text-yellow-500 font-bold mt-2">${carro.Preço}</p>
-            </div>
-          </a>
+          <img src="${carro.imagem_url}" alt="${carro.modelo}" class="rounded-t-lg w-full h-48 object-cover">
+          <div class="p-4">
+            <h4 class="text-xl font-semibold">${carro.modelo}</h4>
+            <p class="text-sm text-gray-600">Ano: ${carro.ano} • KM: ${carro.km}</p>
+            <p class="text-lg text-yellow-500 font-bold mt-2">${carro.preco}</p>
+            <a href="https://wa.me/5511910803102?text=Tenho interesse no ${encodeURIComponent(carro.modelo)}" target="_blank"
+               class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Falar no WhatsApp</a>
+          </div>
         `;
         grid.appendChild(item);
       });
@@ -86,35 +44,26 @@
   </script>
 </head>
 <body class="bg-gray-100 text-gray-800">
-
   <header class="bg-black text-white sticky top-0 z-50 shadow">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <h1 class="text-xl font-bold tracking-wide">Herrera Motors</h1>
-      <span class="hidden sm:inline-block text-yellow-400 font-semibold">(11) 9 1080-3102</span>
+      <span class="text-yellow-400 font-semibold">(11) 9 1080-3102</span>
     </div>
   </header>
 
-  <section class="py-8 bg-white shadow">
-    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
-      <div><label class="block text-sm font-semibold">Marca</label><select id="filtro-marca" onchange="aplicarFiltros()" class="w-full p-2 border rounded"><option value="">Todas</option></select></div>
-      <div><label class="block text-sm font-semibold">Ano</label><select id="filtro-ano" onchange="aplicarFiltros()" class="w-full p-2 border rounded"><option value="">Todos</option></select></div>
-      <div><label class="block text-sm font-semibold">Preço</label><select id="filtro-preco" onchange="aplicarFiltros()" class="w-full p-2 border rounded">
-        <option value="">Todos</option>
-        <option value="1">Até R$ 40 mil</option>
-        <option value="2">R$ 40 mil a R$ 80 mil</option>
-        <option value="3">Acima de R$ 80 mil</option>
-      </select></div>
-    </div>
+  <section class="bg-yellow-400 py-16 text-center">
+    <h2 class="text-4xl font-bold text-black">Seu próximo carro está aqui</h2>
+    <a href="#estoque" class="mt-6 inline-block bg-black text-white px-6 py-3 rounded hover:bg-gray-800">Ver estoque</a>
   </section>
 
-  <section class="py-10 px-4 max-w-7xl mx-auto">
-    <h2 class="text-3xl font-bold text-center mb-8">Estoque Atualizado</h2>
+  <section class="py-16 px-4 max-w-7xl mx-auto">
+    <h3 class="text-3xl font-bold text-center mb-10">Estoque Atualizado</h3>
     <div id="estoque" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <p class="col-span-full text-center">Carregando veículos...</p>
     </div>
   </section>
 
-  <footer class="bg-black text-white text-center py-6">
+  <footer class="bg-black text-white py-10 text-center">
     <p>© 2025 Herrera Motors · Todos os direitos reservados</p>
   </footer>
 </body>
