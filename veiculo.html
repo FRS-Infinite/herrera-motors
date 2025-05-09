@@ -9,30 +9,42 @@
   <body class="bg-white text-black">
     <div id="detalhes" class="flex flex-col md:flex-row p-8 gap-8 max-w-6xl mx-auto"></div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", async () => {
-        const params = new URLSearchParams(window.location.search);
-        const modelo = params.get("modelo");
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const params = new URLSearchParams(window.location.search);
+    const modelo = params.get("modelo");
+    if (!modelo) return;
 
-        const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?modelo=eq." + encodeURIComponent(modelo) + "&select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
-        const dados = await res.json();
+    const res = await fetch(
+      `https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?modelo=eq.${encodeURIComponent(modelo)}&select=*`,
+      {
+        headers: {
+          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
+        }
+      }
+    );
 
-        if (dados.length === 0) return;
+    const dados = await res.json();
+    if (!dados.length) {
+      document.getElementById("detalhes").innerHTML = "<p class='text-red-600'>Veículo não encontrado.</p>";
+      return;
+    }
 
-        const v = dados[0];
-        document.getElementById("detalhes").innerHTML = `
-          <div class="flex-1">
-            <img src="${v.imagem_url}" alt="${v.modelo}" class="w-full rounded shadow" />
-          </div>
-          <div class="flex-1 space-y-4">
-            <h1 class="text-3xl font-bold">${v.modelo}</h1>
-            <p><strong>Ano:</strong> ${v.ano}</p>
-            <p><strong>Km:</strong> ${v.km}</p>
-            <p><strong>Preço:</strong> ${v.preco}</p>
-            <a href="/" class="text-orange-600 underline">Voltar</a>
-          </div>
-        `;
-      });
-    </script>
+    const v = dados[0];
+    document.getElementById("detalhes").innerHTML = `
+      <div class="flex-1">
+        <img src="${v.imagem_url}" alt="${v.modelo}" class="w-full rounded shadow" />
+      </div>
+      <div class="flex-1 space-y-4">
+        <h1 class="text-3xl font-bold">${v.modelo}</h1>
+        <p><strong>Ano:</strong> ${v.ano}</p>
+        <p><strong>Km:</strong> ${v.km}</p>
+        <p><strong>Preço:</strong> ${v.preco}</p>
+        <a href="/" class="text-orange-600 underline">Voltar</a>
+      </div>
+    `;
+  });
+</script>
+
   </body>
 </html>
