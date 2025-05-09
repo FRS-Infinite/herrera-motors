@@ -47,29 +47,51 @@
   </nav>
 
   <!-- Carrossel de destaques -->
-  <section class="px-4 py-8">
-    <h2 class="text-2xl font-semibold text-center mb-4">Destaques da Semana</h2>
-    <div class="carousel space-x-4 overflow-x-auto px-4">
-      <div class="carousel-item flex-shrink-0 w-full sm:w-[300px] bg-white rounded-lg shadow p-4">
-        <img src="https://www.herreramotors.com.br/imagens/8077/8077-1231672457.jpg" alt="Destaque 1" class="rounded mb-2 w-full h-48 object-cover" loading="lazy">
-        <h3 class="font-bold text-lg">Fiat Argo Drive</h3>
-        <p class="text-sm text-gray-500">2022 | 30.000 km</p>
-        <p class="text-orange-600 font-bold mt-1">R$ 65.900</p>
-      </div>
-      <div class="carousel-item flex-shrink-0 w-full sm:w-[300px] bg-white rounded-lg shadow p-4">
-        <img src="https://www.herreramotors.com.br/imagens/8076/8076-329544747.jpg" alt="Destaque 2" class="rounded mb-2 w-full h-48 object-cover" loading="lazy">
-        <h3 class="font-bold text-lg">Hyundai HB20S</h3>
-        <p class="text-sm text-gray-500">2021 | 45.000 km</p>
-        <p class="text-orange-600 font-bold mt-1">R$ 72.800</p>
-      </div>
-      <div class="carousel-item flex-shrink-0 w-full sm:w-[300px] bg-white rounded-lg shadow p-4">
-        <img src="https://www.herreramotors.com.br/imagens/8065/8065-918442207.jpg" alt="Destaque 3" class="rounded mb-2 w-full h-48 object-cover" loading="lazy">
-        <h3 class="font-bold text-lg">Volkswagen T-Cross</h3>
-        <p class="text-sm text-gray-500">2020 | 58.000 km</p>
-        <p class="text-orange-600 font-bold mt-1">R$ 93.900</p>
-      </div>
-    </div>
-  </section>
+  <section class="text-center px-4 py-10 bg-white">
+  <h2 class="text-2xl font-semibold mb-6">Destaques da Semana</h2>
+  <div id="carrosselDestaques" class="flex flex-wrap justify-center gap-6">
+    <!-- Cards serão inseridos via JS -->
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const container = document.getElementById("carrosselDestaques");
+
+    try {
+      const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*", {
+        headers: {
+          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
+        }
+      });
+
+      const dados = await res.json();
+
+      // Selecione até 3 veículos de destaque (por enquanto, os 3 primeiros)
+      const destaques = dados.slice(0, 3);
+
+      destaques.forEach((v) => {
+        const card = document.createElement("a");
+        card.href = `/veiculo.html?modelo=${encodeURIComponent(v.modelo)}`;
+        card.className =
+          "w-72 bg-white border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition text-left";
+
+        card.innerHTML = `
+          <img src="${v.imagem_url}" alt="Imagem ${v.modelo}" class="w-full h-48 object-cover" />
+          <div class="p-4">
+            <h3 class="text-lg font-bold mb-1">${v.modelo}</h3>
+            <p class="text-sm text-gray-500">${v.ano} | ${v.km} km</p>
+            <p class="text-orange-600 font-bold mt-2">${v.preco}</p>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    } catch (error) {
+      console.error("Erro ao carregar destaques:", error);
+    }
+  });
+</script>
 
   <section class="flex flex-col items-center px-4 py-8">
     <h2 class="text-xl font-semibold mb-6">Encontre seu próximo veículo</h2>
