@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-white text-black">
+    <!-- Navbar -->
     <nav class="flex items-center justify-between px-6 py-4 border-b">
       <div class="text-xl font-semibold tracking-widest">HERRERA MOTORS</div>
       <div class="hidden md:flex gap-8 text-sm">
@@ -32,6 +33,7 @@
       </div>
     </nav>
 
+    <!-- Filtro de veículos -->
     <section class="flex flex-col items-center px-4 py-8">
       <h2 class="text-xl font-semibold mb-6">Encontre seu próximo veículo</h2>
       <div class="w-full max-w-5xl flex flex-col md:flex-row justify-center gap-4">
@@ -52,39 +54,45 @@
         const marcaSelect = document.getElementById("marcaSelect");
         const modeloSelect = document.getElementById("modeloSelect");
 
-        const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU");
-        const estoque = await res.json();
+        try {
+          const res = await fetch(
+            "https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*",
+            {
+              headers: {
+                apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
+              }
+            }
+          );
+          const estoque = await res.json();
 
-        if (!estoque.length) {
-          alert("Nenhum veículo encontrado.");
-          return;
+          const marcasUnicas = [...new Set(estoque.map((v) => v.modelo.split(" ")[0]))];
+          marcasUnicas.sort().forEach((marca) => {
+            const opt = document.createElement("option");
+            opt.value = marca;
+            opt.textContent = marca;
+            marcaSelect.appendChild(opt);
+          });
+
+          marcaSelect.addEventListener("change", () => {
+            const marca = marcaSelect.value;
+            modeloSelect.innerHTML = '<option value="">Selecione o modelo</option>';
+            estoque
+              .filter((v) => v.modelo.startsWith(marca))
+              .forEach((v) => {
+                const opt = document.createElement("option");
+                opt.value = v.modelo;
+                opt.textContent = v.modelo;
+                modeloSelect.appendChild(opt);
+              });
+          });
+
+          document.getElementById("btnBuscar").addEventListener("click", () => {
+            const modelo = modeloSelect.value;
+            if (modelo) window.location.href = `/veiculo.html?modelo=${encodeURIComponent(modelo)}`;
+          });
+        } catch (err) {
+          console.error("Erro ao buscar veículos:", err);
         }
-
-        const marcasUnicas = [...new Set(estoque.map((v) => v.modelo.split(" ")[0]))];
-        marcasUnicas.sort().forEach((marca) => {
-          const opt = document.createElement("option");
-          opt.value = marca;
-          opt.textContent = marca;
-          marcaSelect.appendChild(opt);
-        });
-
-        marcaSelect.addEventListener("change", () => {
-          const marca = marcaSelect.value;
-          modeloSelect.innerHTML = '<option value="">Selecione o modelo</option>';
-          estoque
-            .filter((v) => v.modelo.startsWith(marca))
-            .forEach((v) => {
-              const opt = document.createElement("option");
-              opt.value = v.modelo;
-              opt.textContent = v.modelo;
-              modeloSelect.appendChild(opt);
-            });
-        });
-
-        document.getElementById("btnBuscar").addEventListener("click", () => {
-          const modelo = modeloSelect.value;
-          if (modelo) window.location.href = `/veiculo.html?modelo=${encodeURIComponent(modelo)}`;
-        });
       });
     </script>
   </body>
