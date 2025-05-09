@@ -8,20 +8,18 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-white text-black">
-  <!-- Navbar -->
   <nav class="flex items-center justify-between px-6 py-4 border-b">
     <div class="text-xl font-semibold tracking-widest">HERRERA MOTORS</div>
     <div class="hidden md:flex gap-8 text-sm">
       <a href="#" class="hover:underline">Sobre</a>
-      <a href="#" class="hover:underline">Experiência AG</a>
+      <a href="#" class="hover:underline">Experiência HM</a>
       <a href="#" class="hover:underline">Veículos</a>
       <a href="#" class="hover:underline">Blog</a>
-      <a href="#" class="hover:underline">Universo AG</a>
+      <a href="#" class="hover:underline">Universo HM</a>
       <a href="#" class="hover:underline">Contato</a>
     </div>
   </nav>
 
-  <!-- Filtros -->
   <section class="flex flex-col items-center px-4 py-8">
     <h2 class="text-xl font-semibold mb-6">Encontre seu próximo veículo</h2>
     <div class="w-full max-w-5xl flex flex-col md:flex-row justify-center gap-4">
@@ -37,54 +35,65 @@
     </div>
   </section>
 
-  <!-- Lista de veículos -->
   <section id="listaVeiculos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 pb-12 max-w-6xl mx-auto"></section>
 
-  <!-- Script -->
-<script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const marcaSelect = document.getElementById("marcaSelect");
-    const modeloSelect = document.getElementById("modeloSelect");
-    const listaVeiculos = document.getElementById("listaVeiculos");
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const marcaSelect = document.getElementById("marcaSelect");
+      const modeloSelect = document.getElementById("modeloSelect");
+      const listaVeiculos = document.getElementById("listaVeiculos");
 
-    const res = await fetch(
-      "https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*",
-      {
-        headers: {
-          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
+      const res = await fetch(
+        "https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*",
+        {
+          headers: {
+            apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
+          }
         }
-      }
-    );
-    const estoque = await res.json();
+      );
+      const estoque = await res.json();
 
-    const marcasUnicas = [...new Set(estoque.map((v) => v.modelo.split(" ")[0]))];
-    marcasUnicas.sort().forEach((marca) => {
-      const opt = document.createElement("option");
-      opt.value = marca;
-      opt.textContent = marca;
-      marcaSelect.appendChild(opt);
-    });
+      const marcasUnicas = [...new Set(estoque.map((v) => v.modelo.split(" ")[0]))];
+      marcasUnicas.sort().forEach((marca) => {
+        const opt = document.createElement("option");
+        opt.value = marca;
+        opt.textContent = marca;
+        marcaSelect.appendChild(opt);
+      });
 
-    marcaSelect.addEventListener("change", () => {
-      const marcaSelecionada = marcaSelect.value;
-      modeloSelect.innerHTML = '<option value="">Selecione o modelo</option>';
-      estoque
-        .filter((v) => v.modelo.startsWith(marcaSelecionada))
-        .forEach((v) => {
-          const opt = document.createElement("option");
-          opt.value = v.modelo;
-          opt.textContent = v.modelo;
-          modeloSelect.appendChild(opt);
-        });
-    });
+      marcaSelect.addEventListener("change", () => {
+        const marcaSelecionada = marcaSelect.value;
+        modeloSelect.innerHTML = '<option value="">Selecione o modelo</option>';
+        estoque
+          .filter((v) => v.modelo.startsWith(marcaSelecionada))
+          .forEach((v) => {
+            const opt = document.createElement("option");
+            opt.value = v.modelo;
+            opt.textContent = v.modelo;
+            modeloSelect.appendChild(opt);
+          });
+      });
 
-    document.getElementById("btnBuscar").addEventListener("click", () => {
-      const modelo = modeloSelect.value;
-      if (modelo) {
-        window.location.href = `/veiculo.html?modelo=${encodeURIComponent(modelo)}`;
-      }
+      document.getElementById("btnBuscar").addEventListener("click", () => {
+        const modelo = modeloSelect.value;
+        if (modelo) {
+          window.location.href = `/veiculo.html?modelo=${encodeURIComponent(modelo)}`;
+        }
+      });
+
+      // Exibir todos os veículos ao carregar
+      estoque.forEach((v) => {
+        const card = document.createElement("div");
+        card.className = "border p-4 rounded shadow-sm hover:shadow-md transition";
+        card.innerHTML = `
+          <img src="${v.imagem_url}" alt="${v.modelo}" class="w-full h-48 object-cover mb-2 rounded" />
+          <h3 class="font-semibold text-lg">${v.modelo}</h3>
+          <p class="text-sm text-gray-600">Ano: ${v.ano} | KM: ${v.km}</p>
+          <p class="text-orange-600 font-bold mt-1">${v.preco}</p>
+        `;
+        listaVeiculos.appendChild(card);
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
