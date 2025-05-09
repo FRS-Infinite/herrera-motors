@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,13 +10,13 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {{ font-family: 'Segoe UI', sans-serif; }}
-    .gradient-border {{
+    body { font-family: 'Segoe UI', sans-serif; }
+    .gradient-border {
       border: 1px solid transparent;
       background-image: linear-gradient(135deg, #111 0%, #111 100%), linear-gradient(135deg, #cf4520, #ffffff33);
       background-origin: border-box;
       background-clip: padding-box, border-box;
-    }}
+    }
   </style>
   <script>
     async function carregarEstoque() {{
@@ -23,8 +24,8 @@
         headers: {{
           apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU",
           Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
-        }}
-      }});
+        }
+      });
       const data = await res.json();
       const grid = document.getElementById("estoque");
 
@@ -33,22 +34,22 @@
       if (!Array.isArray(data) || data.length === 0) {{
         grid.innerHTML = "<p class='col-span-full text-center text-white'>Nenhum veículo disponível.</p>";
         return;
-      }}
+      }
 
       data.forEach(carro => {{
         const item = document.createElement("div");
         item.className = "bg-black/80 text-white rounded-xl gradient-border p-4 shadow-lg transition hover:scale-[1.02]";
         item.innerHTML = `
-          <img src="${{carro.imagem_url}}" alt="${{carro.modelo}}" class="rounded-lg w-full h-52 object-cover mb-4">
-          <h4 class="text-2xl font-semibold mb-1">${{carro.modelo}}</h4>
-          <p class="text-sm text-gray-400 mb-2">Ano: ${{carro.ano}} • KM: ${{carro.km}}</p>
-          <p class="text-xl text-[#cf4520] font-bold mb-3">${{carro.preco}}</p>
-          <a href="https://wa.me/5511910803102?text=Tenho interesse no ${{encodeURIComponent(carro.modelo)}}" target="_blank"
+          <img src="${carro.imagem_url}" alt="${carro.modelo}" class="rounded-lg w-full h-52 object-cover mb-4">
+          <h4 class="text-2xl font-semibold mb-1">${carro.modelo}</h4>
+          <p class="text-sm text-gray-400 mb-2">Ano: ${carro.ano} • KM: ${carro.km}</p>
+          <p class="text-xl text-[#cf4520] font-bold mb-3">${carro.preco}</p>
+          <a href="https://wa.me/5511910803102?text=Tenho interesse no ${encodeURIComponent(carro.modelo)}" target="_blank"
              class="inline-block bg-[#cf4520] text-white px-5 py-2 rounded hover:bg-[#b13c1c] transition">Falar no WhatsApp</a>
         `;
         grid.appendChild(item);
-      }});
-    }}
+      });
+    }
 
     document.addEventListener("DOMContentLoaded", carregarEstoque);
   </script>
