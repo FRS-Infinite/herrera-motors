@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Herrera Motors</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-white text-black">
@@ -52,8 +52,13 @@
         const marcaSelect = document.getElementById("marcaSelect");
         const modeloSelect = document.getElementById("modeloSelect");
 
-        const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
+        const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU");
         const estoque = await res.json();
+
+        if (!estoque.length) {
+          alert("Nenhum veículo encontrado.");
+          return;
+        }
 
         const marcasUnicas = [...new Set(estoque.map((v) => v.modelo.split(" ")[0]))];
         marcasUnicas.sort().forEach((marca) => {
