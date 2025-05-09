@@ -45,13 +45,14 @@
   document.addEventListener("DOMContentLoaded", async () => {
     const marcaSelect = document.getElementById("marcaSelect");
     const modeloSelect = document.getElementById("modeloSelect");
+    const listaVeiculos = document.getElementById("listaVeiculos");
 
     const res = await fetch(
       "https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*",
       {
         headers: {
-          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-        },
+          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
+        }
       }
     );
     const estoque = await res.json();
