@@ -2,46 +2,23 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Herrera Motors | Estoque Online</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Herrera Motors | Seu próximo carro está aqui</title>
+  <meta name="description" content="Encontre os melhores seminovos com procedência e qualidade. Estoque atualizado diariamente. Herrera Motors - Bauru/SP.">
+  
+  <!-- SEO / Redes Sociais -->
+  <meta property="og:title" content="Herrera Motors" />
+  <meta property="og:description" content="Seminovos com procedência, confiança e atendimento premium em Bauru/SP." />
+  <meta property="og:image" content="https://placehold.co/600x400?text=Herrera+Motors" />
+  <meta property="og:url" content="https://herrera-motors.vercel.app/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    async function carregarEstoque() {
-      const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*", {
-        headers: {
-          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
-        }
-      });
-      const data = await res.json();
-      const grid = document.getElementById("estoque");
-
-      grid.innerHTML = "";
-
-      if (!Array.isArray(data) || data.length === 0) {
-        grid.innerHTML = "<p class='col-span-full text-center text-gray-600'>Nenhum veículo disponível.</p>";
-        return;
-      }
-
-      data.forEach(carro => {
-        const item = document.createElement("div");
-        item.className = "bg-white rounded-lg shadow hover:shadow-lg transition";
-        item.innerHTML = `
-          <img src="${carro.imagem_url}" alt="${carro.modelo}" class="rounded-t-lg w-full h-48 object-cover">
-          <div class="p-4">
-            <h4 class="text-xl font-semibold">${carro.modelo}</h4>
-            <p class="text-sm text-gray-600">Ano: ${carro.ano} • KM: ${carro.km}</p>
-            <p class="text-lg text-yellow-500 font-bold mt-2">${carro.preco}</p>
-            <a href="https://wa.me/5511910803102?text=Tenho interesse no ${encodeURIComponent(carro.modelo)}" target="_blank"
-               class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Falar no WhatsApp</a>
-          </div>
-        `;
-        grid.appendChild(item);
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", carregarEstoque);
-  </script>
 </head>
 <body class="bg-gray-100 text-gray-800">
   <header class="bg-black text-white sticky top-0 z-50 shadow">
