@@ -1,87 +1,58 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Herrera Motors | Exclusividade em 4 Rodas</title>
-  <meta name="description" content="Estoque premium de seminovos selecionados com procedência e sofisticação.">
-  <meta name="theme-color" content="#000000" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <title>Herrera Motors</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Segoe UI', sans-serif; }
-    .gradient-border {
-      border: 1px solid transparent;
-      background-image: linear-gradient(135deg, #111 0%, #111 100%), linear-gradient(135deg, #cf4520, #ffffff33);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
-    }
-  </style>
-  <script>
-    async function carregarEstoque() {{
-      const res = await fetch("https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*", {{
-        headers: {{
-          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU"
-        }
-      });
-      const data = await res.json();
-      const grid = document.getElementById("estoque");
-
-      grid.innerHTML = "";
-
-      if (!Array.isArray(data) || data.length === 0) {{
-        grid.innerHTML = "<p class='col-span-full text-center text-white'>Nenhum veículo disponível.</p>";
-        return;
-      }
-
-      data.forEach(carro => {{
-        const item = document.createElement("div");
-        item.className = "bg-black/80 text-white rounded-xl gradient-border p-4 shadow-lg transition hover:scale-[1.02]";
-        item.innerHTML = `
-          <img src="${carro.imagem_url}" alt="${carro.modelo}" class="rounded-lg w-full h-52 object-cover mb-4">
-          <h4 class="text-2xl font-semibold mb-1">${carro.modelo}</h4>
-          <p class="text-sm text-gray-400 mb-2">Ano: ${carro.ano} • KM: ${carro.km}</p>
-          <p class="text-xl text-[#cf4520] font-bold mb-3">${carro.preco}</p>
-          <a href="https://wa.me/5511910803102?text=Tenho interesse no ${encodeURIComponent(carro.modelo)}" target="_blank"
-             class="inline-block bg-[#cf4520] text-white px-5 py-2 rounded hover:bg-[#b13c1c] transition">Falar no WhatsApp</a>
-        `;
-        grid.appendChild(item);
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", carregarEstoque);
-  </script>
 </head>
 <body class="bg-black text-white">
-  <header class="sticky top-0 z-50 bg-black/90 backdrop-blur shadow border-b border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-[#cf4520] tracking-widest">Herrera Motors</h1>
-      <nav class="space-x-6 text-sm uppercase text-gray-300">
-        <a href="#estoque" class="hover:text-[#cf4520]">Estoque</a>
-        <a href="#" class="hover:text-[#cf4520]">Financiamento</a>
-        <a href="#" class="hover:text-[#cf4520]">Contato</a>
-      </nav>
-    </div>
-  </header>
+  <header class="bg-gray-900 p-4 text-center text-2xl font-bold">Herrera Motors</header>
+  <main class="max-w-6xl mx-auto py-12 px-4">
+    <h2 class="text-3xl font-bold mb-6">Estoque Atualizado</h2>
+    <div id="veiculos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+  </main>
+  <footer class="bg-gray-800 p-6 text-center text-sm text-gray-400">© 2025 Herrera Motors</footer>
 
-  <section class="h-[70vh] flex items-center justify-center text-center bg-[url('https://placehold.co/1600x700/000000/FFFFFF?text=HERRERA+MOTORS')] bg-cover bg-center">
-    <div class="bg-black/70 p-8 rounded-xl">
-      <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">Exclusividade sobre rodas</h2>
-      <a href="#estoque" class="bg-[#cf4520] text-white px-8 py-3 rounded text-lg font-semibold hover:bg-[#b13c1c] transition">Ver Estoque</a>
-    </div>
-  </section>
+  <script>
+    document.addEventListener("DOMContentLoaded", async function carregarEstoque() {
+      const veiculosContainer = document.getElementById("veiculos");
+      const url = "https://roanjrdmydpvbpryiegg.supabase.co/rest/v1/ESTOQUE?select=*";
 
-  <section id="estoque" class="py-20 px-4 max-w-7xl mx-auto">
-    <h3 class="text-3xl font-bold text-center text-white mb-12">Nosso Estoque</h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="estoque">
-      <p class="col-span-full text-center">Carregando veículos...</p>
-    </div>
-  </section>
+      try {
+        const response = await fetch(url, {
+          headers: {
+            "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJvYW5qcmRteWRwdmJwcnlpZWdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4MDgxNDAsImV4cCI6MjA2MjM4NDE0MH0.FW-W8u-oWVsTy70dYFIdfMNsSEwjsndBlBo_ombAuNU",
+          }
+        });
 
-  <footer class="bg-black border-t border-gray-800 text-center py-10 text-gray-500 text-sm">
-    © 2025 Herrera Motors · Bauru/SP
-  </footer>
+        const data = await response.json();
+        veiculosContainer.innerHTML = "";
+
+        data.forEach(carro => {
+          veiculosContainer.innerHTML += `
+            <div class="gradient-border bg-neutral-900 rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105">
+              <img src="${carro.imagem_url}" class="w-full h-48 object-cover" alt="${carro.modelo}">
+              <div class="p-4">
+                <h4 class="text-xl font-bold text-white">${carro.modelo}</h4>
+                <p class="text-sm text-gray-300">${carro.ano} • ${carro.km}</p>
+                <p class="text-lg text-yellow-500 font-bold mt-2">${carro.preco}</p>
+                <a href="https://wa.me/5511910803102?text=Tenho%20interesse%20no%20${encodeURIComponent(carro.modelo)}"
+                  target="_blank"
+                  class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-400">
+                  Falar no WhatsApp
+                </a>
+              </div>
+            </div>
+          `;
+        });
+      } catch (error) {
+        console.error("Erro ao carregar veículos:", error);
+        veiculosContainer.innerHTML = "<p class='text-red-500'>Erro ao carregar os veículos. Tente novamente mais tarde.</p>";
+      }
+    });
+  </script>
 </body>
 </html>
