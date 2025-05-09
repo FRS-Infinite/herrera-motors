@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herrera Motors</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <!-- HEADER -->
+  <header class="bg-black text-white sticky top-0 z-50 shadow">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold tracking-wide">Herrera Motors</h1>
+      <nav class="space-x-6">
+        <a href="#" class="hover:text-yellow-400">Início</a>
+        <a href="#estoque" class="hover:text-yellow-400">Estoque</a>
+        <a href="#financiamento" class="hover:text-yellow-400">Financiamento</a>
+        <a href="#servicos" class="hover:text-yellow-400">Serviços</a>
+        <a href="#depoimentos" class="hover:text-yellow-400">Clientes</a>
+        <a href="#blog" class="hover:text-yellow-400">Blog</a>
+        <a href="#contato" class="hover:text-yellow-400">Contato</a>
+      </nav>
+      <span class="hidden sm:inline-block text-yellow-400 font-semibold">(14) 99999-9999</span>
+    </div>
+  </header>
+
+  <!-- BANNER -->
+  <section class="bg-cover bg-center h-[70vh] flex items-center justify-center text-center" style="background-image: url('https://placehold.co/1920x800?text=Herrera+Motors');">
+    <div class="bg-black bg-opacity-60 p-8 rounded shadow-xl">
+      <h2 class="text-4xl font-bold text-white mb-4">Seu próximo carro está aqui</h2>
+      <a href="#estoque" class="bg-yellow-400 text-black px-6 py-3 rounded font-semibold hover:bg-yellow-300 transition">Ver estoque</a>
+    </div>
+  </section>
+
+  <!-- ESTOQUE -->
+  <section id="estoque" class="py-16 px-4 max-w-7xl mx-auto">
+    <h3 class="text-3xl font-bold text-center mb-10">Estoque Atualizado</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
+        <img src="https://placehold.co/600x400?text=CHEVROLET+CELTA+2012" class="rounded-t-lg" alt="CHEVROLET CELTA 2012">
+        <div class="p-4">
+          <h4 class="text-xl font-semibold">CHEVROLET CELTA 1.0 MPFI LS 8V FLEX 2P MANUAL</h4>
+          <p class="text-sm text-gray-600">2012 • 1.111 km</p>
+          <p class="text-lg text-yellow-500 font-bold mt-2">R$ 24.900,00</p>
+          <a href="#" class="inline-block mt-4 bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-300">Ver mais</a>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
+        <img src="https://placehold.co/600x400?text=FIAT+DUCATO+2012" class="rounded-t-lg" alt="FIAT DUCATO 2012">
+        <div class="p-4">
+          <h4 class="text-xl font-semibold">FIAT DUCATO 2.3 MINIBUS TETO ALTO 8V TURBO DIESEL 3P MANUAL</h4>
+          <p class="text-sm text-gray-600">2012 • 237.000 km</p>
+          <p class="text-lg text-yellow-500 font-bold mt-2">R$ 120.000,00</p>
+          <a href="#" class="inline-block mt-4 bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-300">Ver mais</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RODAPÉ SIMPLIFICADO -->
+  <footer class="bg-black text-white py-10 mt-10" id="contato">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div>
+        <h5 class="font-bold text-lg mb-2">Contato</h5>
+        <p>Telefone: (14) 99999-9999</p>
+        <p>Email: contato@herreramotors.com.br</p>
+        <p>Endereço: Av. das Nações, 123 - Bauru/SP</p>
+      </div>
+      <div>
+        <h5 class="font-bold text-lg mb-2">Horário</h5>
+        <p>Seg a Sex: 08h - 18h</p>
+        <p>Sábados: 08h - 13h</p>
+      </div>
+      <div>
+        <h5 class="font-bold text-lg mb-2">Localização</h5>
+        <iframe class="w-full h-40 rounded" src="https://www.google.com/maps/embed?..." loading="lazy"></iframe>
+      </div>
+    </div>
+    <p class="text-center text-sm text-gray-400 mt-6">© 2025 Herrera Motors. Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>
