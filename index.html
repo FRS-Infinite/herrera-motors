@@ -15,6 +15,23 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+    .carousel-item {
+      scroll-snap-align: start;
+      flex: none;
+      width: 100%;
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body class="bg-white text-black">
   <nav class="flex items-center justify-between px-6 py-4 border-b">
@@ -28,6 +45,31 @@
       <a href="#" class="hover:underline">Contato</a>
     </div>
   </nav>
+
+  <!-- Carrossel de destaques -->
+  <section class="px-4 py-8">
+    <h2 class="text-2xl font-semibold text-center mb-4">Destaques da Semana</h2>
+    <div class="carousel space-x-4 overflow-x-auto px-4">
+      <div class="carousel-item flex-shrink-0 w-full sm:w-[300px] bg-white rounded-lg shadow p-4">
+        <img src="https://www.herreramotors.com.br/imagens/8077/8077-1231672457.jpg" alt="Destaque 1" class="rounded mb-2 w-full h-48 object-cover" loading="lazy">
+        <h3 class="font-bold text-lg">Fiat Argo Drive</h3>
+        <p class="text-sm text-gray-500">2022 | 30.000 km</p>
+        <p class="text-orange-600 font-bold mt-1">R$ 65.900</p>
+      </div>
+      <div class="carousel-item flex-shrink-0 w-full sm:w-[300px] bg-white rounded-lg shadow p-4">
+        <img src="https://www.herreramotors.com.br/imagens/8076/8076-329544747.jpg" alt="Destaque 2" class="rounded mb-2 w-full h-48 object-cover" loading="lazy">
+        <h3 class="font-bold text-lg">Hyundai HB20S</h3>
+        <p class="text-sm text-gray-500">2021 | 45.000 km</p>
+        <p class="text-orange-600 font-bold mt-1">R$ 72.800</p>
+      </div>
+      <div class="carousel-item flex-shrink-0 w-full sm:w-[300px] bg-white rounded-lg shadow p-4">
+        <img src="https://www.herreramotors.com.br/imagens/8065/8065-918442207.jpg" alt="Destaque 3" class="rounded mb-2 w-full h-48 object-cover" loading="lazy">
+        <h3 class="font-bold text-lg">Volkswagen T-Cross</h3>
+        <p class="text-sm text-gray-500">2020 | 58.000 km</p>
+        <p class="text-orange-600 font-bold mt-1">R$ 93.900</p>
+      </div>
+    </div>
+  </section>
 
   <section class="flex flex-col items-center px-4 py-8">
     <h2 class="text-xl font-semibold mb-6">Encontre seu próximo veículo</h2>
